@@ -29,6 +29,14 @@ Kaggle zbirka podatkov, ki jih bomo uporabili vsebuje 8676 vrstic podatkov. Vsak
 
 Za evaluacijo naših MBTI osebnosti bomo uporabili še test osebnosti na spletni strani 16 Personalities (https://www.16personalities.com/free-personality-test), katera pravtako uporablja MBTI sistem klasifikacije osebnostnega karakterja in je ena izmed najbolj popularnih spletnih strani za napovedovanje MBTI karakterja.
 
+## Inicializacija podatkov
 
+    import pandas as pd
+    import numpy as np
+    import seaborn as sns
+    import matplotlib.pyplot as plt
+
+    df = pd.read_csv('data/mbti_1.csv')
+    df.head()
 
 
