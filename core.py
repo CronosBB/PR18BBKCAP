@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 df = pd.read_csv('data/mbti_1.csv')
 df.head()
 
-## Splitamo vsak komentar
+## Splitamo vsak komentar za varianco oz. odstopanje
 def var_row(row):
     l = []
     for i in row.split('|||'):
@@ -92,14 +92,17 @@ df.groupby('type').agg({'type':'count'}).sort_values('type', ascending=False)
 ## Kot lahko vidimo so tipi ESFJ, ESFP, ESTJ in ESTP zelo redki
 
 ## Dajmo ustvarit nov dataframe brez teh tipov 
-df2 = df[~df['type'].isin(['ESFJ','ESFP','ESTJ','ESTP'])]
+#df2 = df[~df['type'].isin(['ESFJ','ESFP','ESTJ','ESTP'])]
+df2 = df
 df2.head()
 
 ## Dajmo prešteti vse komentarje kateri vsebujejo linke na druge strani in vse komentarje ki sprašujejo
 df2['http_per_comment'] = df2['posts'].apply(lambda x: x.count('http'))
-
 ## Vprašaji 
 df2['qm_per_comment'] = df2['posts'].apply(lambda x: x.count('?'))
+
+df2[['http_per_comment','qm_per_comment']]
+
 # testdata.map(lambda x: x if (x < 30 or x > 60) else 0)
 df2['qm_per_comment_additional'] = df2['posts'].apply(lambda x: x.count('?|||') + x.count('? ') + x.count(' ?'))
 df2.head(20)
@@ -112,13 +115,14 @@ df2.head(20)
 ## Poglejmo povprečje linkov glede na tip
 print(df2.groupby('type').agg({'http_per_comment': 'mean'}).sort_values('http_per_comment', ascending=False))
 ## Poglejmo povprečje '?' znakov glede na tip
-print(df2.groupby('type').agg({'qm_per_comment': 'mean'}).sort_values('qm_per_comment', ascending=False))
+print(df2.groupby('type').agg({'qm_per_comment_additional': 'mean'}).sort_values('qm_per_comment_additional', ascending=False))
 df2.head()
 
 ## Vizualizacija
 plt.figure(figsize=(10,8))
 sns.swarmplot("type", "qm_per_comment_additional", data=df2)
 
+plt.figure(figsize=(10,8))
 sns.swarmplot("type", "http_per_comment", data=df2)
 
 df['counted_words_per_comment'] = df.groupby('words_per_comment').agg({'words_per_comment': 'sum'}).sort_values('words_per_comment', ascending=False)
