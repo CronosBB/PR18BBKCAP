@@ -99,8 +99,7 @@ V osnovi nas zanima distribucija podatkov glede na število besed na osebo za vs
     plt.figure(figsize=(10,8))
     sns.swarmplot("type", "words_per_person", data=df)
     
-![distribucija podatkov](figures/Figure_1%20-%20Words%20per%20person%20-%20type.png)
-
+![distribucija podatkov](figures/Figure_1%20-%20Words%20per%20person%20-%20type_fixed.png)
 
 Iz osnovne distribucije glede na število besed/MBTI tip lahko razberemo nekaj zanimivih predpostavk.
 
