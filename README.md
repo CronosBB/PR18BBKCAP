@@ -3,6 +3,11 @@ Project work for Data Mining course at University of Ljubljana - 2018
 
 Slovene only:
 
+## Avtorji
+- Blaž Blažinčič
+- Kevin Cvetežar
+- Anže Peharc
+
 # Izbor podatkovne množice
 Za projektno nalogo pri Podatkovnem Rudarjenju FRI Ljubljana smo si izbrali "(MBTI) Myers-Briggs Personality Type Dataset" (https://goo.gl/hqd5Nu). "Myers Briggs Type Indicator" je sistem klasifikacije osebnostnega karakterja, kateri deli vsakogar na 16 osebnostnih tipov skozi 4 axiome:
 
