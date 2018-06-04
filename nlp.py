@@ -242,12 +242,63 @@ print(dfcon[pd.isnull(dfcon).any(axis=1)])
 print(dfcon['post'].isnull() == True)
 
 
+import pandas as pd
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import TfidfTransformer
+import numpy as np
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.linear_model import SGDClassifier
+from sklearn.neural_network import MLPClassifier
+from sklearn.pipeline import Pipeline
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier
+dataraw = pd.read_csv('mbti_consolidated2.csv', encoding='latin1') #text in column 1, classifier in column 2.
+#intro_extra = pd.read_csv('data/mbti_1.csv')
 
-training_set = sentim_analyzer.apply_features(training_docs)
-test_set = sentim_analyzer.apply_features(testing_docs)
+data = dataraw.copy()
 
-trainer = NaiveBayesClassifier.train
-classifier = sentim_analyzer.train(trainer, training_set)
 
-for key,value in sorted(sentim_analyzer.evaluate(test_set).items()):
-    print('{0}: {1}'.format(key, value))
+def evalSGD():
+    j=0 #for iterating
+    k=1 #for iterating through axioms
+    _score = []
+    for r in range(4):
+        for i in range(len(data)):
+            data['type'].values[i] = dataraw['type'].values[i][j:k]
+        
+        temp = data.copy()
+        temp = temp[['index', 'type', 'post', 'uid']]
+        temp.dropna(axis=0, inplace=True)
+        
+        numpy_array = temp.as_matrix()
+        Y = numpy_array[:,1]
+        X = numpy_array[:,2]
+        X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.3, shuffle=True, random_state=42)
+        ## BAYES
+        text_clf_sgd = Pipeline([('vect', CountVectorizer(stop_words='english')),
+                      ('tfidf', TfidfTransformer()),
+                      ('clf-svm', SGDClassifier(loss='hinge', penalty='l2',
+                                            alpha=1e-3, max_iter=10, random_state=42)),
+        ])
+        text_clf_sgd = text_clf_sgd.fit(X_train,Y_train)
+        predicted_svm = text_clf_sgd.predict(X_test)
+        
+        j += 1
+        k += 1
+        _score.append(np.mean(predicted_svm == Y_test))
+
+    ax1 = ax2 = ax3 = ax4 = 0
+    ax1 = _score[0]
+    ax2 = _score[1]
+    ax3 = _score[2]
+    ax4 = _score[3]
+    print('     Stochastic Gradient Descent Classifier  (Ocene napovedi modela)   ')
+    print('-----------------------------------------------------------------------')
+    print('Introvert (I) - Extrovert  (E):               {0}'.format(ax1))
+    print('Intuition (N) - Sensing    (S):               {0}'.format(ax2))
+    print('Thinking  (T) - Feeling    (F):               {0}'.format(ax3))
+    print('Judging   (J) - Perceiving (P):               {0}'.format(ax4))
+
+evalSGD()
+
